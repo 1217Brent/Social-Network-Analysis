@@ -1,47 +1,233 @@
-#pragma once
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
+#ifndef List_H_INCLUDE_
+#define List_H_INCLUDE_
 
-typedef struct ListObj* List;
+#include <iostream>
+#include <string>
 
-//=============Constructors and Destructors============//
-List newList(void);         // Creates and returns a new empty List.
-void freeList(List* pL);         // Frees all heap memory associated with *pL and sets *pL to NULL.
+class ListADT {
 
-//==============Access Functions==============//
-int length(List L);                       // Returns the number of elements in L.
-int index(List L);                    // Returns index of cursor element if defined, -1 otherwise.
-void* front(List L);                      // Returns front element of L. Pre: length()>0.
-void* back(List L);                  // Returns back element of L. Pre: length()>0.
-void* get(List L);                       // Returns cursor element of L. Pre: length()>0, index()>=0.
-//int equals(List A, List B);        // Returns 1 iff Lists A and B are in same state, returns 0 otherwise.
+private:
+    
+    struct NodeObj;
 
-//=============Manipulation Processes============//
-void clear(List L);                     // Resets L to its original empty state
-void set(List L, void* x);          // Overwrites the cursor element's data with x. Pre: length()>0, index()>=0.
-void moveFront(List L);                 // If L is non-empty, sets cursor under the front element.
-void moveBack(List L);              // If L is non-empty, sets cursor under the back element.
-void movePrev(List L);                  // If cursor is defined and not at front, move curosr one step toward the
-                                        // front of L. If cursor is defined and at front, cursor becomes
-                                        // undefined.
-void moveNext(List L);              // If cursor is defined and not at back, move cursor one step toward the
-                                    // back of L. If cursor is defined and at back, cursor becomes undefined.
-void prepend(List L, void* x);          // Insert new element into L. If L is non-empty, insertion takes place
-                                        // before the front element.
-void append(List L, void* x);       // Insert new element into L. If L is non-empty, insertion takes place after
-                                    // the back element.
-void insertBefore(List L, void* x);     // Insert new element before cursor. Pre: length()>0, index()>=0.
-void insertAfter(List L, void* x);  // Insert new element after cursor. Pre: length()>0, index()>=0.
-void deleteFront(List L);               // Delete the front element. Pre: length()>0.
-void deleteBack(List L);            // Delete the back element. Pre: length()>0.
-void delete(List L);                    // Delete cursor element, making cursor undefined. Pre: length()>0,
-                                        // index()>=0.
+    typedef struct NodeObj* Node;
+    typedef struct IDNodeObj* IDNode;
+    typedef struct NameNodeObj* NameNode;
+    typedef struct AgeNodeObj* AgeNode;
+    typedef struct LocationNodeObj* LocationNode;
+    typedef struct FriendsListNodeObj* FriendsList;
+    typedef struct InterestsListNodeObj* InterestsList;
 
-//===============Other Operations=============//
-void printList(FILE* out, List L);      // Prints to the file pointed to by out, a string representation of L
-                                        // consisting of a space separated sequence of integers, with front on
-                                        // left.
-List copyList(List L);              // Returns a new List representing the same integer sequence of L. The
-                                    // cursor in the new list is undefined, regardless of the state of the
+    struct NodeObj {
+        int data;
+        Node next;
+        Node prev;
+    };
+
+    typedef struct IDNodeObj {
+        int id;
+        Node next;
+        // ...
+    } *IDNode;
+
+    typedef struct NameNodeObj {
+        char* name;
+        Node next;
+        Node prev;
+    } *NameNode;
+
+    typedef struct AgeNodeObj {
+        int age;
+        Node next;
+        Node prev;
+    } *AgeNode;
+
+    typedef struct LocationNodeObj {
+        char* location;
+        Node next;
+        Node prev;
+    } *LocationNode;
+
+    typedef struct FriendsListNodeObj {
+        ListADT friends_list;
+        Node next;
+        Node prev;
+    } *FriendsList;
+
+    typedef struct InterestsListNodeObj {
+        ListADT interests_list;
+        Node prev;
+        Node next;
+
+    } *InterestsList;
+
+    //list fields
+    Node* frontDummy;
+    Node* backDummy;
+    Node* beforeCursor;
+    Node* afterCursor;
+    int pos_cursor;
+    int num_elements;
+
+public:
+
+   // Class Constructors & Destructors ----------------------------------------
+   
+   // Creates new List in the empty state.
+   List();
+
+   // Copy constructor.
+   List(const List& L);
+
+   // Destructor
+   ~List();
+
+
+   // Access functions --------------------------------------------------------
+
+   // length()
+   // Returns the length of this List.
+   int length() const;
+
+   // front()
+   // Returns the front element in this List.
+   // pre: length()>0
+   ListElement front() const;
+
+   // back()
+   // Returns the back element in this List.
+   // pre: length()>0
+   ListElement back() const;
+
+   // position()
+   // Returns the position of cursor in this List: 0 <= position() <= length().
+   int position() const;
+
+   // peekNext()
+   // Returns the element after the cursor.
+   // pre: position()<length()
+   ListElement peekNext() const;
+
+   // peekPrev()
+   // Returns the element before the cursor.
+   // pre: position()>0
+   ListElement peekPrev() const;
+
+
+   // Manipulation procedures -------------------------------------------------
+
+   // clear()
+   // Deletes all elements in this List, setting it to the empty state.
+   void clear();
+
+   // moveFront()
+   // Moves cursor to position 0 in this List.
+   void moveFront();
+
+   // moveBack()
+   // Moves cursor to position length() in this List.
+   void moveBack();
+
+   // moveNext()
+   // Advances cursor to next higher position. Returns the List element that
+   // was passed over. 
+   // pre: position()<length() 
+   ListElement moveNext();
+
+   // movePrev()
+   // Advances cursor to next lower position. Returns the List element that
+   // was passed over. 
+   // pre: position()>0
+   ListElement movePrev();
+
+   // insertAfter()
+   // Inserts x after cursor.
+   void insertAfter(ListElement x);
+
+   // insertBefore()
+   // Inserts x before cursor.
+   void insertBefore(ListElement x);
+
+   // setAfter()
+   // Overwrites the List element after the cursor with x.
+   // pre: position()<length()
+   void setAfter(ListElement x);
+
+   // setBefore()
+   // Overwrites the List element before the cursor with x.
+   // pre: position()>0
+   void setBefore(ListElement x);
+
+   // eraseAfter()
+   // Deletes element after cursor.
+   // pre: position()<length()
+   void eraseAfter();
+
+   // eraseBefore()
+   // Deletes element before cursor.
+   // pre: position()>0
+   void eraseBefore();
+
+
+   // Other Functions ---------------------------------------------------------
+
+   // findNext()
+   // Starting from the current cursor position, performs a linear search (in 
+   // the direction front-to-back) for the first occurrence of element x. If x
+   // is found, places the cursor immediately after the found element, then 
+   // returns the final cursor position. If x is not found, places the cursor 
+   // at position length(), and returns -1. 
+   int findNext(ListElement x);
+
+   // findPrev()
+   // Starting from the current cursor position, performs a linear search (in 
+   // the direction back-to-front) for the first occurrence of element x. If x
+   // is found, places the cursor immediately before the found element, then
+   // returns the final cursor position. If x is not found, places the cursor 
+   // at position 0, and returns -1. 
+   int findPrev(ListElement x);
+
+   // cleanup()
+   // Removes any repeated elements in this List, leaving only unique elements.
+   // The order of the remaining elements is obtained by retaining the frontmost 
+   // occurrance of each element, and removing all other occurances. The cursor 
+   // is not moved with respect to the retained elements, i.e. it lies between 
+   // the same two retained elements that it did before cleanup() was called.
+   void cleanup();
+ 
+   // concat()
+   // Returns a new List consisting of the elements of this List, followed by
+   // the elements of L. The cursor in the returned List will be at postion 0.
+   List concat(const List& L) const;
+
+   // to_string()
+   // Returns a string representation of this List consisting of a comma 
+   // separated sequence of elements, surrounded by parentheses.
+   std::string to_string() const;
+
+   // equals()
+   // Returns true if and only if this List is the same integer sequence as R.
+   // The cursors in this List and in R are unchanged.
+   bool equals(const List& R) const;
+
+
+   // Overriden Operators -----------------------------------------------------
+   
+   // operator<<()
+   // Inserts string representation of L into stream.
+   friend std::ostream& operator<<( std::ostream& stream, const List& L );
+
+   // operator==()
+   // Returns true if and only if A is the same integer sequence as B. The 
+   // cursors in both Lists are unchanged.
+   friend bool operator==( const List& A, const List& B );
+
+   // operator=()
+   // Overwrites the state of this List with state of L.
+   List& operator=( const List& L );
+
+};
+
+
+#endif
 
