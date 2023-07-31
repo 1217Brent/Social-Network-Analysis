@@ -3,12 +3,16 @@
 
 #include <iostream>
 #include <string>
+#include <variant>
 
 class ListADT {
 
 private:
     
     struct NodeObj;
+
+    // Define a variant type to represent different data types that a node can hold
+    typedef std::variant<int, char*, int, char*, ListADT, ListADT> EverythingNode;
 
     typedef struct NodeObj* Node;
     typedef struct IDNodeObj* IDNode;
@@ -27,7 +31,7 @@ private:
     typedef struct IDNodeObj {
         int id;
         Node next;
-        // ...
+        //...
     } *IDNode;
 
     typedef struct NameNodeObj {
@@ -92,26 +96,27 @@ public:
    // front()
    // Returns the front element in this List.
    // pre: length()>0
-   ListElement front() const;
+   int front() const;
 
    // back()
    // Returns the back element in this List.
    // pre: length()>0
-   ListElement back() const;
+   ListADT back() const;
 
    // position()
    // Returns the position of cursor in this List: 0 <= position() <= length().
    int position() const;
 
+
    // peekNext()
    // Returns the element after the cursor.
    // pre: position()<length()
-   ListElement peekNext() const;
+   EverythingNode peekNext() const;
 
    // peekPrev()
    // Returns the element before the cursor.
    // pre: position()>0
-   ListElement peekPrev() const;
+   EverythingNode peekPrev() const; 
 
 
    // Manipulation procedures -------------------------------------------------
