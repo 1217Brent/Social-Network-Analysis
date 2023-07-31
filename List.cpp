@@ -58,6 +58,11 @@ ListADT* ListADT::newList() {
     //finished connecting Friends to Interests
     Interestslist->next = nullptr;
     //we will use this function in a different function by calling then storing information one by one
+
+    newList->frontDummy->next = ID; //we need to change pointer type of frontDummy -> NodeObj -> Node to return type IDNode
+    newList->backDummy->prev = Interestslist; //maybe use dynamic_cast because the prev is a pointer to a node and we need it to be pointing to ListADT
+    beforeCursor = frontDummy;
+    afterCursor = frontDummy->next;
     return this;
 }
 
