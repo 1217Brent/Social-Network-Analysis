@@ -15,6 +15,8 @@ private:
     typedef std::variant<int, char*, int, char*, ListADT, ListADT> EverythingNode;
 
     typedef struct NodeObj* Node;
+    typedef struct frontDummyNodeObj* FrontDummyNode;
+    typedef struct backDummyNodeObj* BackDummyNode;
     typedef struct IDNodeObj* IDNode;
     typedef struct NameNodeObj* NameNode;
     typedef struct AgeNodeObj* AgeNode;
@@ -22,11 +24,24 @@ private:
     typedef struct FriendsListNodeObj* FriendsList;
     typedef struct InterestsListNodeObj* InterestsList;
 
+
     struct NodeObj {
         int data;
         Node next;
         Node prev;
-    };
+    } *NodeObj;
+
+    typedef struct frontDummyNodeObj {
+        //data is nullptr
+        //frontdummynext needs to be IDNode
+        IDNode next;
+    } FrontDummyNodeObj;
+
+    typedef struct backDummyNodeObj {
+        //data is nullptr
+        //backdummyprev needs to be ListADT
+        ListADT prev;
+    } *BackDummyNodeObj;
 
     typedef struct IDNodeObj {
         int id;
@@ -66,10 +81,10 @@ private:
     } *InterestsList;
 
     //list fields
-    Node* frontDummy;
-    Node* backDummy;
-    Node* beforeCursor;
-    Node* afterCursor;
+    FrontDummyNode* frontDummy; //the next has to point to IDNode
+    BackDummyNode* backDummy; //the prev has to be pointing to ListADT
+    EverythingNode* beforeCursor;
+    EverythingNode* afterCursor;
     int pos_cursor;
     int num_elements;
 
