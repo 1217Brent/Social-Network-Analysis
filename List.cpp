@@ -29,41 +29,48 @@ ListADT::ListADT(const ListADT& L) {
 }
 
 ListADT* ListADT::newList() {
-    //calloc when allocates memory sets all bytes to 0 initially
-
-    ListADT newList = new List();
+    ListADT* newList = new List();
 
     IDNode ID = new IDNodeObj();
     NameNode Name = new NameNodeObj();
     AgeNode Age = new AgeNodeObj();
     LocationNode Location = new LocationNodeObj();
     FriendsList Friendslist = new FriendsListNodeObj();
-    InterestsList Interestslist = new InterestsListNodeObj();    
-    
-    ID->prev = nullptr;
+    InterestsList Interestslist = new InterestsListNodeObj();
+
+    // Connecting frontDummy to ID
+    frontDummy->next = ID;
+    ID->prev = frontDummy;
+
+    // Connecting ID to Name
     ID->next = Name;
     Name->prev = ID;
-    //finished connecting ID and Name
+
+    // Connecting Name to Age
     Name->next = Age;
     Age->prev = Name;
-    //finished connecting Name to Age
+
+    // Connecting Age to Location
     Age->next = Location;
     Location->prev = Age;
-    //finished connecting Age to Location
+
+    // Connecting Location to Friends
     Location->next = Friendslist;
-    FriendsList->prev = Location;
-    //finished connecting Location to Friends
+    Friendslist->prev = Location;
+
+    // Connecting Friends to Interests
     Friendslist->next = Interestslist;
     Interestslist->prev = Friendslist;
-    //finished connecting Friends to Interests
-    Interestslist->next = nullptr;
-    //we will use this function in a different function by calling then storing information one by one
 
-    newList->frontDummy->next = ID; //we need to change pointer type of frontDummy -> NodeObj -> Node to return type IDNode
-    newList->backDummy->prev = Interestslist; //maybe use dynamic_cast because the prev is a pointer to a node and we need it to be pointing to ListADT
+    // Connecting Interests to backDummy
+    Interestslist->next = backDummy;
+    backDummy->prev = Interestslist;
+
+    // Set beforeCursor and afterCursor
     beforeCursor = frontDummy;
     afterCursor = frontDummy->next;
-    return this;
+
+    return newList;
 }
 
 //=================Access Functions==============//
