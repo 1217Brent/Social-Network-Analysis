@@ -97,12 +97,43 @@ EverythingNode ListADT::peekNext() const {
     //lets first get a pointer that points to where afterCursor is pointing to then return that
     //but before that we need to include constraints
     if (this->afterCursor == nullptr) {
-        std::cout << "position() Error: The pointer is nullptr." << std::endl;
+        std::cout << "peekNext() Error: The pointer is nullptr." << std::endl;
     }
     if (this->position <= 0) {
        std::cout << "peekNext() Error: position is less or equal to 0" << std::endl; 
     }
     Node pointer = this->afterCursor;
+    if (IDNode idnode = dynamic_cast<IDNodeObj*>(pointer)) {
+        return idnode->id;
+    }
+    else if (NameNode namenode = dynamic_cast<NameNodeObj*>(pointer)) {
+        return namenode->name;
+    }
+    else if (AgeNode agenode = dynamic_cast<AgeNodeObj*>(pointer)) {
+        return agenode->age;
+    }
+    else if (LocationNode locationnode = dynamic_cast<LocationNodeObj*>(pointer)) {
+        return locationnode->location;
+    }
+    else if (FriendsList friendslist = dynamic_cast<FriendsListNodeObj*>(pointer)) {
+        return friendslist->friends_list
+    }
+    else if (InterestsList interestslist = dynamic_cast<InterestsListNodeObj*>(pointer)) {
+        return interestslist->interests_list;
+    }
+    return -1; //if everything fails
+}
+
+EverythingNode ListADT::peekPrev() const {
+    //lets first get a pointer that points to where afterCursor is pointing to then return that
+    //but before that we need to include constraints
+    if (this->beforeCursor == nullptr) {
+        std::cout << "peekPrev() Error: The pointer is nullptr." << std::endl;
+    }
+    if (this->position <= 0) {
+       std::cout << "peekPrev() Error: position is less or equal to 0" << std::endl; 
+    }
+    Node pointer = this->beforeCursor;
     if (IDNode idnode = dynamic_cast<IDNodeObj*>(pointer)) {
         return idnode->id;
     }
