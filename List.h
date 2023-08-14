@@ -32,53 +32,53 @@ private:
     } *NodeObj;
 
     typedef struct frontDummyNodeObj {
-        //data is nullptr
+        int data;
         //frontdummynext needs to be IDNode
         IDNode next;
-    } FrontDummyNodeObj;
+    } *frontDummyNodeObj;
 
     typedef struct backDummyNodeObj {
-        //data is nullptr
-        //backdummyprev needs to be ListADT
-        ListADT prev;
-    } *BackDummyNodeObj;
+        int data;
+        //backdummyprev needs to be pointing to the entire Interest struct
+        InterestsList prev;
+    } *backDummyNodeObj;
 
     typedef struct IDNodeObj {
         int id;
-        Node next;
+        NameNodeObj next;
         //...
-    } *IDNode;
+    } *IDNodeObj;
 
     typedef struct NameNodeObj {
         char* name;
-        Node next;
-        Node prev;
-    } *NameNode;
+        AgeNodeObj next;
+        IDNodeObj prev;
+    } *NameNodeObj;
 
     typedef struct AgeNodeObj {
         int age;
-        Node next;
-        Node prev;
-    } *AgeNode;
+        LocationNodeObj next;
+        NameNodeObj prev;
+    } *AgeNodeObj;
 
     typedef struct LocationNodeObj {
         char* location;
-        Node next;
-        Node prev;
-    } *LocationNode;
+        FriendsListNodeObj next;
+        AgeNodeObj prev;
+    } *LocationNodeObj;
 
     typedef struct FriendsListNodeObj {
         ListADT friends_list;
-        Node next;
-        Node prev;
-    } *FriendsList;
+        InterestsListNodeObj next;
+        LocationNodeObj prev;
+    } *FriendsListNodeObj;
 
     typedef struct InterestsListNodeObj {
         ListADT interests_list;
-        Node prev;
-        Node next;
+        FriendsListNodeObj prev;
+        BackDummyNode next;
 
-    } *InterestsList;
+    } *InterestsListNodeObj;
 
     //list fields
     FrontDummyNode* frontDummy; //the next has to point to IDNode
@@ -91,7 +91,8 @@ private:
 public:
 
    // Class Constructors & Destructors ----------------------------------------
-   
+   frontDummyNodeInitializer(int x);
+   backDummyNodeInitializer(int y;)
    // Creates new List in the empty state.
    List();
 
