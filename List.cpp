@@ -4,10 +4,9 @@ using namespace std;
 
 
 //=============Constructors & Destructors============//
-
 ListADT::List() { //creates new list
-    frontDummy = new NodeObj();
-    backDummy = new NodeObj();
+    frontDummy = new frontDummyNodeObj;
+    backDummy = new backDummyNodeObj;
     frontDummy->next = backDummy;
     backDummy->prev = frontDummy;
     beforeCursor = frontDummy;
@@ -28,8 +27,8 @@ ListADT::ListADT(const ListADT& L) {
     newList.moveFront(); // Moves the cursor to the front of the new list
 }
 
-ListADT* ListADT::newList() {
-    ListADT* newList = new List();
+ListADT ListADT::newList() {
+    ListADT newList;
 
     IDNode ID = new IDNodeObj();
     NameNode Name = new NameNodeObj();
@@ -160,4 +159,11 @@ EverythingNode ListADT::peekPrev() const {
         return interestslist->interests_list;
     }
     return -1; //if everything fails
+}
+
+void ListADT::clear() {
+    this->moveFront();
+    while(this->length > 0) {
+        this->eraseAfter();
+    }
 }
